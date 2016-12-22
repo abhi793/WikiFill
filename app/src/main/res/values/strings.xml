@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WikiFill</string>
+    <string name="get_paragraph_url">https://en.wikipedia.org/w/api.php?format=json&amp;action=query&amp;generator=random&amp;grnnamespace=0&amp;prop=extracts&amp;rvprop=content&amp;grnlimit=1</string>
+</resources>
