@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import in.demo.wikifill.MainActivity;
 import in.demo.wikifill.R;
@@ -44,7 +45,7 @@ public class GetParagraph {
 
         String url = activity.getResources().getString(R.string.get_paragraph_url);
         final ProgressDialog progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Downloading...");
+        progressDialog.setMessage("Fetching Paragraph with blanks...");
         progressDialog.show();
         StringRequest vehiclesReq = new StringRequest(url,
                 new Response.Listener<String>() {
@@ -53,8 +54,38 @@ public class GetParagraph {
                         progressDialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
+                            JSONObject query = jsonObject.getJSONObject("query");
+                            JSONObject pages = query.getJSONObject("pages");
+                            Iterator<?> keys = pages.keys();//Logic to get the first object from a jsonObject
+                            String key = (String)keys.next();
+                            JSONObject content = pages.getJSONObject(key);
+                            String paragraph = content.getString("extract").replaceAll("\\<[^>]*>","").replaceAll("\\\n","").replaceAll("\\/","");
+                            String [] lines = paragraph.split("\\.");
+                            int temp = lines.length;
+                            String [] linesToBeShown = new String[10];
+                            //Check whether the paragraph we have fetched is of approprite size or not
+                            //we make a recursive call until we get paragarph of atleast 14 lines.
+                            if(temp<15)
+                            {
+                                getwikiParagraph(activity);
+                            }
+                            else
+                            {
+                                int j=0;
+                                for(int i =0 ;i<10;)
+                                {
 
-
+                                    String line = lines[i];
+                                    if(line.length()>15) {
+                                        linesToBeShown[i] = lines[j];
+                                        i++;
+                                        j++;
+                                    }
+                                    else
+                                    j++;
+                                }
+                                activity.callBackFromGetParagraph(linesToBeShown);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

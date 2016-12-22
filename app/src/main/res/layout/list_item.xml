@@ -4,19 +4,19 @@
     android:layout_height="match_parent"
     android:weightSum="3">
 <TextView
-    android:layout_width="0dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/start_text"
-    android:layout_weight="1"/>
+    android:typeface="serif"/>
     <AutoCompleteTextView
-        android:layout_width="0dp"
+        android:layout_width="20dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:textStyle="bold"
         android:id="@+id/fill_blank"/>
     <TextView
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/end_text"
-        android:layout_weight="1"/>
+        android:typeface="serif"/>
 
 </LinearLayout>
