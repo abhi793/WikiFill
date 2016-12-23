@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="3">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/start_text"
+    android:textSize="14sp"
     android:typeface="serif"/>
     <AutoCompleteTextView
-        android:layout_width="20dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
+        android:background="#FFFFFF"
+        android:textSize="16sp"
+        android:gravity="center"
         android:id="@+id/fill_blank"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/end_text"
+        android:textSize="14sp"
         android:typeface="serif"/>
 
 </LinearLayout>

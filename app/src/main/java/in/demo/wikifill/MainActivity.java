@@ -1,5 +1,6 @@
 package in.demo.wikifill;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.Animation;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList <ListItemModel> modelList;
     private ListView linesListView;
     private CustomListAdapter adapter;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         activity = this;
         title = (TextView)findViewById(R.id.level_textview);
         animation =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
-        GetParagraph.getInstance().getwikiParagraph(activity); //Network call to get the random paragraph from wiki
+
         answers = new ArrayList<String>();
         linesListView = (ListView)findViewById(R.id.line_list);
         shuffledanswers = new ArrayList<String>();
@@ -41,10 +43,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         title.startAnimation(animation);
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setMessage("Fetching Paragraph with blanks...");
+        progressDialog.show();
+        GetParagraph.getInstance().getwikiParagraph(activity); //Network call to get the random paragraph from wiki
     }
 
     public void callBackFromGetParagraph(String [] arr)
     {
+
         for(int i =0;i<arr.length;i++)
         {
             String [] temp = Utility.getInstance().stringManipulation(arr[i]);
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             answers.add(temp[1]);
         }
         shuffledanswers = Utility.getInstance().shuffle(answers);
+        progressDialog.dismiss();
         adapter = new CustomListAdapter(this,modelList,shuffledanswers);
         linesListView.setAdapter(adapter);
     }

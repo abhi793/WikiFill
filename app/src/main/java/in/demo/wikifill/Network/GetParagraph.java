@@ -44,14 +44,11 @@ public class GetParagraph {
     {
 
         String url = activity.getResources().getString(R.string.get_paragraph_url);
-        final ProgressDialog progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Fetching Paragraph with blanks...");
-        progressDialog.show();
         StringRequest vehiclesReq = new StringRequest(url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        progressDialog.dismiss();
+
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONObject query = jsonObject.getJSONObject("query");
@@ -93,7 +90,7 @@ public class GetParagraph {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
+
                 Toast.makeText(activity,"Try Again",Toast.LENGTH_SHORT).show();
             }
         });
