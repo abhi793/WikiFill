@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
@@ -26,6 +27,7 @@ public class CustomListAdapter extends BaseAdapter {
     private ArrayList<ListItemModel> listItemModels;
     private ArrayList<String> shuffledList;
     private ViewHolder holder;
+    private ArrayAdapter<String> adapter;
 
     public CustomListAdapter(Activity activity, ArrayList<ListItemModel> listItemModels,ArrayList<String> shuffledList) {
         this.activity = activity;
@@ -60,11 +62,9 @@ public class CustomListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.list_item, null);
 
 
-            holder.start = (TextView) convertView
-                    .findViewById(R.id.start_text);
+            holder.start = (TextView) convertView.findViewById(R.id.start_text);
             holder.end = (TextView) convertView.findViewById(R.id.end_text);
             holder.blank = (AutoCompleteTextView) convertView.findViewById(R.id.fill_blank);
-            holder.adapter=new ArrayAdapter<String>(activity, android.R.layout.simple_dropdown_item_1line,shuffledList);
 
             convertView.setTag(holder);
 
@@ -79,7 +79,9 @@ public class CustomListAdapter extends BaseAdapter {
         // setting values to the ui fields
         holder.start.setText(m.getStartLine());
         holder.end.setText(m.getEndLine());
-        holder.blank.setAdapter(holder.adapter);
+        adapter=new ArrayAdapter<String>(activity, android.R.layout.simple_dropdown_item_1line,shuffledList);
+        holder.blank.setThreshold(1);
+        holder.blank.setAdapter(adapter);
         holder.blank.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -87,14 +89,22 @@ public class CustomListAdapter extends BaseAdapter {
                 return false;
             }
         });
+        holder.blank.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                InputMethodManager in = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(arg1.getApplicationWindowToken(), 0);
+
+            }
+
+        });
         return convertView;
     }
     private static class ViewHolder {
         public   TextView start;
         public   AutoCompleteTextView blank;
         public   TextView end;
-        public ArrayAdapter<String> adapter;
     }
 
 }
