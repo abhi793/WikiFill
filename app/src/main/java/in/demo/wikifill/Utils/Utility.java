@@ -23,16 +23,22 @@ public class Utility {
     {
     String [] ans = new String[3];
     String [] temp = line.split(" ");
-    int idx = new Random().nextInt(temp.length-1);
+    int idx = new Random().nextInt(temp.length-2);
     StringBuilder start = new StringBuilder();
     StringBuilder end = new StringBuilder();
     for(int i=0;i<idx;i++)
     {
+        if(i<idx-1)
         start.append(temp[i]+" ");
+        else
+            start.append(temp[i]);
     }
-    for(int i=idx+1;i<temp.length-1;i++)
+    for(int i=idx+1;i<temp.length;i++)
     {
+        if(i<temp.length-1)
         end.append(temp[i]+" ");
+        else
+            end.append(temp[i]);
     }
     ans[0]=start.toString();
     ans[1]=temp[idx];

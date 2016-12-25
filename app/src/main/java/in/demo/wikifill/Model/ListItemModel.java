@@ -1,5 +1,4 @@
 package in.demo.wikifill.Model;
-
 /**
  * Created by Abhishek Pc on 22-12-2016.
  */
@@ -7,6 +6,7 @@ package in.demo.wikifill.Model;
 public class ListItemModel {
     private String startLine;
     private String endLine;
+    private String blank;
 
     public ListItemModel() {
     }
@@ -15,6 +15,7 @@ public class ListItemModel {
     public ListItemModel(String startLine, String endLine) {
         this.startLine = startLine;
         this.endLine = endLine;
+        this.blank = null;
     }
 
     public String getStartLine() {
@@ -32,4 +33,14 @@ public class ListItemModel {
     public void setEndLine(String endLine) {
         this.endLine = endLine;
     }
+
+    public String getBlank() {
+        return blank;
+    }
+
+    public void setBlank(String blank) {
+        this.blank = blank;
+    }
+
+
 }

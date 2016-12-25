@@ -71,8 +71,9 @@ public class GetParagraph {
                                 int j=0;
                                 for(int i =0 ;i<10;)
                                 {
-
-                                    String line = lines[i];
+                                    if(j>temp-1)
+                                        break;
+                                    String line = lines[j];
                                     if(line.length()>15) {
                                         linesToBeShown[i] = lines[j];
                                         i++;

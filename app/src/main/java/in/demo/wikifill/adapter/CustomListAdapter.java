@@ -1,11 +1,15 @@
 package in.demo.wikifill.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,12 +17,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
+
+
 import in.demo.wikifill.Model.ListItemModel;
 import in.demo.wikifill.R;
 
-/**
- * Created by Abhishek Pc on 22-12-2016.
- */
+
 
 public class CustomListAdapter extends BaseAdapter {
 
@@ -26,10 +30,9 @@ public class CustomListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<ListItemModel> listItemModels;
     private ArrayList<String> shuffledList;
-    private ViewHolder holder;
-    private ArrayAdapter<String> adapter;
 
-    public CustomListAdapter(Activity activity, ArrayList<ListItemModel> listItemModels,ArrayList<String> shuffledList) {
+    public CustomListAdapter(Activity activity, ArrayList<ListItemModel> listItemModels,
+                             ArrayList<String> shuffledList) {
         this.activity = activity;
         this.listItemModels = listItemModels;
         this.shuffledList = shuffledList;
@@ -41,7 +44,7 @@ public class CustomListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int location) {
+    public ListItemModel getItem(int location) {
         return listItemModels.get(location);
     }
 
@@ -50,61 +53,75 @@ public class CustomListAdapter extends BaseAdapter {
         return position;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
 
-         holder = new ViewHolder();
-        if (inflater == null)
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+
+
+        if (inflater == null) {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item, null);
-
-
-            holder.start = (TextView) convertView.findViewById(R.id.start_text);
-            holder.end = (TextView) convertView.findViewById(R.id.end_text);
-            holder.blank = (AutoCompleteTextView) convertView.findViewById(R.id.fill_blank);
-
-            convertView.setTag(holder);
-
         }
-        else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        @SuppressLint({"ViewHolder", "InflateParams"})
+        View myView = inflater.inflate(R.layout.list_item, null);
 
-        // getting  data for the row
-        ListItemModel m = listItemModels.get(position);
+        final ViewHolder holder = new ViewHolder();
+        holder.position = position;
+        holder.start = (TextView) myView
+                .findViewById(R.id.start_text);
+        holder.end = (TextView) myView.findViewById(R.id.end_text);
+        holder.blank = (AutoCompleteTextView) myView.findViewById(R.id.fill_blank);
+        holder.adapter = new ArrayAdapter<>(activity, android.R.layout.simple_dropdown_item_1line, shuffledList);
+
 
         // setting values to the ui fields
-        holder.start.setText(m.getStartLine());
-        holder.end.setText(m.getEndLine());
-        adapter=new ArrayAdapter<String>(activity, android.R.layout.simple_dropdown_item_1line,shuffledList);
-        holder.blank.setThreshold(1);
-        holder.blank.setAdapter(adapter);
+        holder.start.setText(listItemModels.get(position).getStartLine());
+        holder.end.setText(listItemModels.get(position).getEndLine());
+        holder.blank.setText(listItemModels.get(position).getBlank());
+        System.out.println("listItem" + listItemModels.get(position).getBlank());
+        holder.blank.setAdapter(holder.adapter);
+
+
         holder.blank.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 holder.blank.showDropDown();
+                System.out.println("onTouch" + position);
                 return false;
             }
-        });
-        holder.blank.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+
+        });
+        holder.blank.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                InputMethodManager in = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                in.hideSoftInputFromWindow(arg1.getApplicationWindowToken(), 0);
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if( !charSequence.toString().equals("")) {
+                    System.out.println("onTextChanged" + position);
+                    listItemModels.get(position).setBlank(charSequence.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
         });
-        return convertView;
+
+
+        return myView;
     }
     private static class ViewHolder {
-        public   TextView start;
-        public   AutoCompleteTextView blank;
-        public   TextView end;
+        int position;
+        TextView start;
+        AutoCompleteTextView blank;
+        TextView end;
+        ArrayAdapter<String> adapter;
     }
 
 }
