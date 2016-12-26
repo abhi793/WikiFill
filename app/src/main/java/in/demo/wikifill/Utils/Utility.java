@@ -19,11 +19,16 @@ public class Utility {
             utility = new Utility();
         return utility;
     }
+    //Function to create the start, end and blank from a sentence
     public String [] stringManipulation(String line)
     {
     String [] ans = new String[3];
     String [] temp = line.split(" ");
-    int idx = new Random().nextInt(temp.length-2);
+        int idx = temp.length/2;
+        if(temp.length>2)
+    idx = new Random().nextInt(temp.length-2); //choose a random number to get the position of the string
+        while (temp[idx].length()<=1)             // which will be blank in the sentece
+        idx =new Random().nextInt(temp.length-2);
     StringBuilder start = new StringBuilder();
     StringBuilder end = new StringBuilder();
     for(int i=0;i<idx;i++)
@@ -38,7 +43,7 @@ public class Utility {
         if(i<temp.length-1)
         end.append(temp[i]+" ");
         else
-            end.append(temp[i]);
+            end.append(temp[i]+".");
     }
     ans[0]=start.toString();
     ans[1]=temp[idx];

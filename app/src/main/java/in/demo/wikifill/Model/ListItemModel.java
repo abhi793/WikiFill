@@ -15,7 +15,7 @@ public class ListItemModel {
     public ListItemModel(String startLine, String endLine) {
         this.startLine = startLine;
         this.endLine = endLine;
-        this.blank = null;
+        this.blank = "";
     }
 
     public String getStartLine() {

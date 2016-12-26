@@ -9,15 +9,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 
 import in.demo.wikifill.Model.ListItemModel;
 import in.demo.wikifill.R;
@@ -30,6 +28,8 @@ public class CustomListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<ListItemModel> listItemModels;
     private ArrayList<String> shuffledList;
+    private String beforeTextchange;
+    private ArrayAdapter<String> adapter;
 
     public CustomListAdapter(Activity activity, ArrayList<ListItemModel> listItemModels,
                              ArrayList<String> shuffledList) {
@@ -72,7 +72,8 @@ public class CustomListAdapter extends BaseAdapter {
                 .findViewById(R.id.start_text);
         holder.end = (TextView) myView.findViewById(R.id.end_text);
         holder.blank = (AutoCompleteTextView) myView.findViewById(R.id.fill_blank);
-        holder.adapter = new ArrayAdapter<>(activity, android.R.layout.simple_dropdown_item_1line, shuffledList);
+        holder.backSpaceImageview = (ImageView) myView.findViewById(R.id.backspace_image);
+        adapter = new ArrayAdapter<>(activity, android.R.layout.simple_dropdown_item_1line, shuffledList);
 
 
         // setting values to the ui fields
@@ -80,9 +81,17 @@ public class CustomListAdapter extends BaseAdapter {
         holder.end.setText(listItemModels.get(position).getEndLine());
         holder.blank.setText(listItemModels.get(position).getBlank());
         System.out.println("listItem" + listItemModels.get(position).getBlank());
-        holder.blank.setAdapter(holder.adapter);
+        holder.blank.setAdapter(adapter);
 
-
+        holder.backSpaceImageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!holder.blank.getText().toString().equals("")) {
+                    shuffledList.add(holder.blank.getText().toString());
+                    holder.blank.setText("");
+                }
+            }
+        });
         holder.blank.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -96,14 +105,18 @@ public class CustomListAdapter extends BaseAdapter {
         holder.blank.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+               beforeTextchange = charSequence.toString();
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if( !charSequence.toString().equals("")) {
-                    System.out.println("onTextChanged" + position);
+                    System.out.println("onTextChanged" + shuffledList.size());
                     listItemModels.get(position).setBlank(charSequence.toString());
+                    shuffledList.remove(charSequence.toString());
+                    if(beforeTextchange!=null && !beforeTextchange.equals(""))
+                        shuffledList.add(beforeTextchange);
+                    adapter.notifyDataSetChanged();
                 }
             }
 
@@ -121,7 +134,7 @@ public class CustomListAdapter extends BaseAdapter {
         TextView start;
         AutoCompleteTextView blank;
         TextView end;
-        ArrayAdapter<String> adapter;
+        ImageView backSpaceImageview;
     }
 
 }

@@ -1,22 +1,17 @@
 package in.demo.wikifill.Network;
 
-import android.app.ProgressDialog;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
-import in.demo.wikifill.MainActivity;
+import in.demo.wikifill.ui.MainActivity;
 import in.demo.wikifill.R;
 import in.demo.wikifill.app.AppController;
 
@@ -75,7 +70,7 @@ public class GetParagraph {
                                         break;
                                     String line = lines[j];
                                     if(line.length()>15) {
-                                        linesToBeShown[i] = lines[j];
+                                        linesToBeShown[i] = lines[j].trim();
                                         i++;
                                         j++;
                                     }
