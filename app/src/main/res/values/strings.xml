@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">WikiFill</string>
     <string name="get_paragraph_url">https://en.wikipedia.org/w/api.php?format=json&amp;action=query&amp;generator=random&amp;grnnamespace=0&amp;prop=extracts&amp;rvprop=content&amp;grnlimit=1</string>
+    <string name="welcome_tag">Lets play\nWikiFill</string>
+    <string name="score_message_pass">Congratulations you passed !!</string>
+    <string name="score_message_fail">Oops you could not make it !!</string>
+    <string name="your_score">Your score</string>
 </resources>
