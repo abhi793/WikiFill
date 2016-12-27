@@ -1,5 +1,9 @@
 package in.demo.wikifill.Utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -24,11 +28,9 @@ public class Utility {
     {
     String [] ans = new String[3];
     String [] temp = line.split(" ");
-        int idx = temp.length/2;
-        if(temp.length>2)
-    idx = new Random().nextInt(temp.length-2); //choose a random number to get the position of the string
-        while (temp[idx].length()<=1)             // which will be blank in the sentece
-        idx =new Random().nextInt(temp.length-2);
+        int idx = temp.length/2;   //choose a random number to get the position of the string which will be blank in the sentece
+        while (temp[idx].length()<=1)
+        idx = new Random().nextInt(temp.length-1);// choosing the blank word of atleast 2 letters
     StringBuilder start = new StringBuilder();
     StringBuilder end = new StringBuilder();
     for(int i=0;i<idx;i++)
@@ -61,5 +63,17 @@ public class Utility {
             Collections.swap(shuffledList,i,idx);
         }
         return shuffledList;
+    }
+    public static boolean isInternetConnected(Context context) {
+        ConnectivityManager manager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        if (info == null) {
+            return false;
+        }
+        if (info.getState() != NetworkInfo.State.CONNECTED) {
+            return false;
+        }
+        return true;
     }
 }

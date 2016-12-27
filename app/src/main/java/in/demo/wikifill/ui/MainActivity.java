@@ -2,10 +2,11 @@ package in.demo.wikifill.ui;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
 
@@ -38,11 +36,16 @@ public class MainActivity extends AppCompatActivity {
     private CustomListAdapter adapter;
     private ProgressDialog progressDialog;
     private Button submitButton;
+    public String currentLevel;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    private String [] levelUparray;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity = this;
+        levelUparray = getResources().getStringArray(R.array.random_words);//extra words to add in shuffled list on level up
         title = (TextView)findViewById(R.id.level_textview);
         submitButton = (Button)findViewById(R.id.submit_button);
         animation =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
@@ -51,10 +54,20 @@ public class MainActivity extends AppCompatActivity {
         linesListView = (ListView)findViewById(R.id.line_list);
         shuffledanswers = new ArrayList<String>();
         modelList = new ArrayList<ListItemModel>();
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Fetching Paragraph with blanks...");
-        progressDialog.show();
-        GetParagraph.getInstance().getwikiParagraph(activity); //Network call to get the random paragraph from wiki
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        editor = pref.edit();
+        currentLevel = pref.getString("currentLevel", null);
+        if (currentLevel != null && !currentLevel.isEmpty()) {
+            title.setText("LEVEL "+ currentLevel);
+        }
+        else
+        {
+            currentLevel ="1";
+            editor.putString("currentLevel","1");
+            editor.commit();
+        }
+
+       networkCall();
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-
     }
 
     public void callBackFromGetParagraph(String [] arr)
@@ -89,6 +100,16 @@ public class MainActivity extends AppCompatActivity {
             answers.add(temp[1]);
         }
         shuffledanswers = Utility.getInstance().shuffle(answers);
+        int levelUp=Integer.parseInt(currentLevel)-1;
+        if(levelUp>0)
+        {
+            int i = 0;
+            while(i<levelUp)
+            {
+                shuffledanswers.add(levelUparray[i]); //adding random words on level up
+                i++;
+            }
+        }
         progressDialog.dismiss();
         adapter = new CustomListAdapter(this,modelList,shuffledanswers);
         linesListView.setAdapter(adapter);
@@ -97,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void showResult(final int score)
     {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 
         View layout = inflater.inflate(R.layout.scorecard_dialogbox,
@@ -111,24 +132,77 @@ public class MainActivity extends AppCompatActivity {
         scoreTextview.setText(getString(R.string.your_score)+" "+String.valueOf(score)+"/10");
         dialog.setView(layout);
         dialog.setTitle("Scorecard");
-        dialog.setPositiveButton("Proceed", new DialogInterface.OnClickListener(){
+        if(score>5) {
+            dialog.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
 
-            public void onClick(DialogInterface dialog, int which) {
-                if(score<=5)
-                    Toast.makeText(MainActivity.this,"You have get more than 5 points to move to next level",Toast.LENGTH_LONG).show();
-                else
-                dialog.dismiss();
-            }
+                public void onClick(DialogInterface dialog, int which) {
+                    int levelVal=Integer.parseInt(currentLevel);
+                    if(levelVal==5)
+                    {
+                        Intent intent = getIntent();
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setClass(MainActivity.this, EndActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        currentLevel = String.valueOf(levelVal + 1);
+                        editor.putString("currentLevel", String.valueOf(levelVal + 1));
+                        editor.commit();
+                        title.setText("LEVEL " + String.valueOf(levelVal + 1));
+                        modelList.clear();
+                        answers.clear();
+                        shuffledanswers.clear();
+                        networkCall();
+                        dialog.dismiss();
+                    }
+                }
 
-        });
-        dialog.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
+            });
+        }
+        else {
+            dialog.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    modelList.clear();
+                    answers.clear();
+                    shuffledanswers.clear();
+                    networkCall();
+                }
+            });
+        }
+        dialog.setCancelable(false);
         dialog.create();
         dialog.show();
+    }
+    public void networkCall()
+    {
+        if(Utility.getInstance().isInternetConnected(this))
+        {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Fetching Paragraph with blanks...");
+            progressDialog.show();
+            GetParagraph.getInstance().getwikiParagraph(activity); //Network call to get the random paragraph from wiki
+        }
+        else
+            buildAlertMessageNoInternet();
+    }
+    private void buildAlertMessageNoInternet() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your internet seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_DATA_ROAMING_SETTINGS));
+                    }
+                    //
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }

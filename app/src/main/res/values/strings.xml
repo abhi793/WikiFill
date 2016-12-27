@@ -5,4 +5,15 @@
     <string name="score_message_pass">Congratulations you passed !!</string>
     <string name="score_message_fail">Oops you could not make it !!</string>
     <string name="your_score">Your score</string>
+    <string name="random1">abscond</string>
+    <string name="random2">blandishment</string>
+    <string name="random3">carouse</string>
+    <string name="random4">defunct</string>
+    <string name="end_message">Thank you for playing the game!!</string>
+    <string-array name="random_words">
+        <item>@string/random1</item>
+        <item>@string/random2</item>
+        <item>@string/random3</item>
+        <item>@string/random4</item>
+    </string-array>
 </resources>
