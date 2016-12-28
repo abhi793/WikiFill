@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
         editor = pref.edit();
         currentLevel = pref.getString("currentLevel", null);
-        if (currentLevel != null && !currentLevel.isEmpty()) {
+        if (currentLevel != null && !currentLevel.isEmpty()) { //check the current level of the user
             title.setText("LEVEL "+ currentLevel);
         }
         else
@@ -89,15 +89,19 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    /**
+     * This function sets the sentences to the List item model
+     * @param arr,array of sentences fetched from wikipedia
+     */
     public void callBackFromGetParagraph(String [] arr)
     {
 
         for(int i =0;i<arr.length;i++)
         {
-            String [] temp = Utility.getInstance().stringManipulation(arr[i]);
-            ListItemModel model = new ListItemModel(temp[0],temp[2]);
+            String [] sentenceDivisions = Utility.getInstance().stringManipulation(arr[i]);
+            ListItemModel model = new ListItemModel(sentenceDivisions[0],sentenceDivisions[2]);
             modelList.add(model);
-            answers.add(temp[1]);
+            answers.add(sentenceDivisions[1]);
         }
         shuffledanswers = Utility.getInstance().shuffle(answers);
         int levelUp=Integer.parseInt(currentLevel)-1;

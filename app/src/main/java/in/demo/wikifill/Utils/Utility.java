@@ -23,7 +23,12 @@ public class Utility {
             utility = new Utility();
         return utility;
     }
-    //Function to create the start, end and blank from a sentence
+
+    /**
+     * Function to divide a sentence
+     * @param line, A sentence
+     * @return array of string containg the start,end and blank of the sentence
+     */
     public String [] stringManipulation(String line)
     {
     String [] ans = new String[3];
@@ -52,6 +57,12 @@ public class Utility {
     ans[2]=end.toString();
     return ans;
     }
+
+    /**
+     * shuffle the arraylist of strings
+     * @param answers ,arraylist of strings
+     * @return  shuffled arraylist of strings
+     */
     public ArrayList<String> shuffle(ArrayList<String> answers)
     {
         ArrayList<String> shuffledList = new ArrayList<>();
