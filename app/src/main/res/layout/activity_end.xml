@@ -28,6 +28,7 @@
         android:background="@color/colorPrimary"
         android:text="Restart"
         android:layout_below="@+id/end_message"
+        android:layout_marginTop="30dp"
         android:textColor="#ffffff"/>
 
 </RelativeLayout>

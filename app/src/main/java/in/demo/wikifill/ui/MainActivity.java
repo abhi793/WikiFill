@@ -139,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
                     int levelVal=Integer.parseInt(currentLevel);
                     if(levelVal==5)
                     {
+                        modelList.clear();
+                        answers.clear();
+                        shuffledanswers.clear();
                         Intent intent = getIntent();
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.setClass(MainActivity.this, EndActivity.class);

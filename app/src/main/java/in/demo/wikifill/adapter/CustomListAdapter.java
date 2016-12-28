@@ -91,6 +91,7 @@ public class CustomListAdapter extends BaseAdapter {
                 if(!holder.blank.getText().toString().equals("")) {
                     shuffledList.add(holder.blank.getText().toString());
                     holder.blank.setText("");
+                    listItemModels.get(position).setBlank("");
                 }
             }
         });
