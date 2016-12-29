@@ -1,14 +1,9 @@
 package in.demo.wikifill.app;
 
-/**
- * Created by Abhishek Pc on 05-08-2016.
- */
-import android.app.Application;
-import android.text.TextUtils;
 
+import android.app.Application;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 
@@ -17,7 +12,6 @@ public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
 
     private RequestQueue mRequestQueue;
-    private ImageLoader mImageLoader;
 
     private static AppController mInstance;
 
@@ -38,22 +32,8 @@ public class AppController extends Application {
 
         return mRequestQueue;
     }
-
-
-    public <T> void addToRequestQueue(Request<T> req, String tag) {
-        // set the default tag if tag is empty
-        req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
-        getRequestQueue().add(req);
-    }
-
     public <T> void addToRequestQueue(Request<T> req) {
         req.setTag(TAG);
         getRequestQueue().add(req);
-    }
-
-    public void cancelPendingRequests(Object tag) {
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(tag);
-        }
     }
 }

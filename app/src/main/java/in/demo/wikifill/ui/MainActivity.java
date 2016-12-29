@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         shuffledAnswers = new ArrayList<>();
         modelList = new ArrayList<>();
         pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-
         currentLevel = pref.getString("currentLevel", null);
         if (currentLevel != null && !currentLevel.isEmpty()) { //check the current level of the user
             String textToSet = getResources().getString(R.string.level) +" "+ currentLevel;
@@ -133,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
         else
             messageTextview.setText(getString(R.string.score_message_fail));
         TextView scoreTextview = (TextView)layout.findViewById(R.id.score);
-        scoreTextview.setText(getString(R.string.your_score)+" "+String.valueOf(score)+"/10");
+        String scoreValue = getString(R.string.your_score)+" "+String.valueOf(score)+"/10";
+        scoreTextview.setText(scoreValue);
         dialog.setView(layout);
         dialog.setTitle("Scorecard");
         if(score>5) {

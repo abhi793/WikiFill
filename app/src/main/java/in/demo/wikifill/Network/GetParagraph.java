@@ -15,13 +15,10 @@ import in.demo.wikifill.ui.MainActivity;
 import in.demo.wikifill.R;
 import in.demo.wikifill.app.AppController;
 
-/**
- * Created by Abhishek Pc on 21-12-2016.
- */
 
 public class GetParagraph {
 
-     static GetParagraph getParagraph;
+    private static GetParagraph getParagraph;
 
      private GetParagraph()
      {
@@ -39,7 +36,7 @@ public class GetParagraph {
     {
 
         String url = activity.getResources().getString(R.string.get_paragraph_url);
-        StringRequest vehiclesReq = new StringRequest(url,
+        StringRequest paragraphReq = new StringRequest(url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -92,6 +89,6 @@ public class GetParagraph {
         });
 
 
-        AppController.getInstance().addToRequestQueue(vehiclesReq);
+        AppController.getInstance().addToRequestQueue(paragraphReq);
     }
 }
