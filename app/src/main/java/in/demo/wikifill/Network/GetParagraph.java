@@ -1,4 +1,4 @@
-package in.demo.wikifill.Network;
+package in.demo.wikifill.network;
 
 import android.widget.Toast;
 
@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+import in.demo.wikifill.utils.Constants;
 import in.demo.wikifill.ui.MainActivity;
 import in.demo.wikifill.R;
 import in.demo.wikifill.app.AppController;
@@ -51,22 +52,22 @@ public class GetParagraph {
                             String paragraph = content.getString("extract").replaceAll("\\<[^>]*>","").replaceAll("\\\n","").replaceAll("\\/","");
                             String [] lines = paragraph.split("\\.");
                             int temp = lines.length;
-                            String [] linesToBeShown = new String[10];
+                            String [] linesToBeShown = new String[Constants.ARRAY_SIZE];
                             //Check whether the paragraph we have fetched is of approprite size or not
                             //we make a recursive call until we get paragarph of atleast 14 lines.
-                            if(temp<15)
+                            if(temp< Constants.PARAGRAPH_SIZE)
                             {
                                 getwikiParagraph(activity);
                             }
                             else
                             {
                                 int j=0;
-                                for(int i =0 ;i<10;)
+                                for(int i =0 ;i<Constants.ARRAY_SIZE;)
                                 {
                                     if(j>temp-1)
                                         break;
                                     String line = lines[j];
-                                    if(line.length()>15) {
+                                    if(line.length()>Constants.PARAGRAPH_SIZE) {
                                         linesToBeShown[i] = lines[j].trim();
                                         i++;
                                         j++;

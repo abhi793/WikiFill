@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/start_text"
-    android:textSize="14sp"
-    android:textColor="#000000"
+    android:textSize="@dimen/smaller_text"
+    android:textColor="@color/black"
     android:typeface="serif"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,9 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textStyle="bold"
-        android:background="#FFFFFF"
-        android:textSize="16sp"
-        android:ems="12"
+        android:background="@color/white"
+        android:textSize="@dimen/small_text"
         android:gravity="center"
         android:textColor="@color/colorAccent"
         android:focusable="false"
@@ -30,15 +29,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/backspace"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="@dimen/margin_left"
             android:id="@+id/backspace_image"/>
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/end_text"
-        android:textSize="14sp"
-        android:textColor="#000000"
+        android:textSize="@dimen/smaller_text"
+        android:textColor="@color/black"
         android:typeface="serif"/>
 
 </LinearLayout>

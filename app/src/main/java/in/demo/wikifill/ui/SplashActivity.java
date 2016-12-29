@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import in.demo.wikifill.R;
+import in.demo.wikifill.utils.Constants;
 
 public class SplashActivity extends Activity {
 
@@ -20,7 +21,6 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
-        final int SPLASH_DISPLAY_LENGTH = 2000;
         TextView welcomeTextview = (TextView)findViewById(R.id.welcome_message);
         Animation animation =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.splash_screen_animation);
         welcomeTextview.startAnimation(animation);
@@ -32,6 +32,6 @@ public class SplashActivity extends Activity {
                 startActivity(mainIntent);
                 finish();
             }
-        }, SPLASH_DISPLAY_LENGTH);
+        }, Constants.SPLASH_DISPLAY_LENGTH);
     }
 }

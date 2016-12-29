@@ -1,4 +1,4 @@
-package in.demo.wikifill.Utils;
+package in.demo.wikifill.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -27,39 +27,39 @@ public class Utility {
     /**
      * Function to divide a sentence
      * @param line, A sentence
-     * @return array of string containg the start,end and blank of the sentence
+     * @return array of string containing the start,end and blank of the sentence
      */
     public String [] stringManipulation(String line)
     {
-    String [] ans = new String[3];
-    String [] temp = line.split(" ");
-        int idx = temp.length/2;   //choose a random number to get the position of the string which will be blank in the sentece
-        while (temp[idx].length()<=1)
-        idx = new Random().nextInt(temp.length-1);// choosing the blank word of atleast 2 letters
+    String [] ans = new String[Constants.ANSWER_ARRAY_SIZE];
+    String [] words = line.split(" ");
+        int idx = words.length/2;
+        while (words[idx].length()<=1)// choosing the blank word of at least 2 letters
+        idx = new Random().nextInt(words.length-1);//choose a random number to get the position of the string which will be blank in the sentence
     StringBuilder start = new StringBuilder();
     StringBuilder end = new StringBuilder();
     for(int i=0;i<idx;i++)
     {
         if(i<idx-1) {
-            String getWord = temp[i] + " ";
+            String getWord = words[i] + " ";
             start.append(getWord);
         }
         else
-            start.append(temp[i]);
+            start.append(words[i]);
     }
-    for(int i=idx+1;i<temp.length;i++)
+    for(int i=idx+1;i<words.length;i++)
     {
-        if(i<temp.length-1) {
-            String getWord = temp[i] + " ";
+        if(i<words.length-1) {
+            String getWord = words[i] + " ";
             end.append(getWord);
         }
         else {
-            String getWord = temp[i] + ".";
+            String getWord = words[i] + ".";
             end.append(getWord);
         }
     }
     ans[0]=start.toString();
-    ans[1]=temp[idx];
+    ans[1]=words[idx];
     ans[2]=end.toString();
     return ans;
     }
@@ -75,7 +75,7 @@ public class Utility {
         for (String word : answers) {
             shuffledList.add(word);
             }
-        for(int i = 0 ;i<=5;i++) {
+        for(int i = 0 ;i<=Constants.LAST_LEVEL;i++) {
             int idx = new Random().nextInt(answers.size() - 1);
             Collections.swap(shuffledList,i,idx);
         }

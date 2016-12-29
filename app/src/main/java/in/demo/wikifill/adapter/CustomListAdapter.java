@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import in.demo.wikifill.Model.ListItemModel;
+import in.demo.wikifill.model.ListItemModel;
 import in.demo.wikifill.R;
 
 

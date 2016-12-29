@@ -18,9 +18,9 @@ public class EndActivity extends AppCompatActivity {
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+                SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreference_name), 0); // 0 - for private mode
                 SharedPreferences.Editor editor = pref.edit();
-                editor.remove("currentLevel"); // removing the level so that the game starts from level 1
+                editor.remove(getString(R.string.sharedpreference_key)); // removing the level so that the game starts from level 1
                 editor.apply();
                 Intent intent = getIntent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

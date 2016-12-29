@@ -1,4 +1,4 @@
-package in.demo.wikifill.Model;
+package in.demo.wikifill.model;
 /**
  * Created by Abhishek Pc on 22-12-2016.
  */

@@ -13,6 +13,17 @@
     <string name="level">LEVEL</string>
     <string name="total_score">/10</string>
     <string name="first_level">1</string>
+    <string name="progressdialog_message">Fetching Paragraph with blanks...</string>
+    <string name="internet_off_message">Your internet seems to be disabled, do you want to enable it?</string>
+    <string name="sharedpreference_key">currentLevel</string>
+    <string name="alertdialog_positive_text">Proceed</string>
+    <string name="alertdialog_negative_text">Retry</string>
+    <string name="internet_alertdialog_positive">Yes</string>
+    <string name="internet_alertdialog_negative">No</string>
+    <string name="alertdialog_title">Scorecard</string>
+    <string name="sharedpreference_name">MyPref</string>
+    <string name="submit_button_text">SUBMIT</string>
+    <string name="restart_button_text">RESTART</string>
     <string-array name="random_words">
         <item>@string/random1</item>
         <item>@string/random2</item>

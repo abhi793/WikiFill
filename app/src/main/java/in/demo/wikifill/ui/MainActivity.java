@@ -18,11 +18,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import in.demo.wikifill.Model.ListItemModel;
-import in.demo.wikifill.Network.GetParagraph;
+import in.demo.wikifill.model.ListItemModel;
+import in.demo.wikifill.network.GetParagraph;
 import in.demo.wikifill.R;
-import in.demo.wikifill.Utils.Constants;
-import in.demo.wikifill.Utils.Utility;
+import in.demo.wikifill.utils.Constants;
+import in.demo.wikifill.utils.Utility;
 import in.demo.wikifill.adapter.CustomListAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
     public String currentLevel;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
-    private String [] levelUparray;
+    private String [] levelUpArray;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity = this;
-        levelUparray = getResources().getStringArray(R.array.random_words);//extra words to add in shuffled list on level up
+        levelUpArray = getResources().getStringArray(R.array.random_words);//extra words to add in shuffled list on level up
         title = (TextView)findViewById(R.id.level_textview);
         Button submitButton = (Button)findViewById(R.id.submit_button);
         animation =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
         linesListView = (ListView)findViewById(R.id.line_list);
         shuffledAnswers = new ArrayList<>();
         modelList = new ArrayList<>();
-        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        pref = getApplicationContext().getSharedPreferences(getString(R.string.sharedpreference_name), 0); // 0 - for private mode
         editor = pref.edit();
-        currentLevel = pref.getString("currentLevel", null);
+        currentLevel = pref.getString(getString(R.string.sharedpreference_key), null);
         if (currentLevel != null && !currentLevel.isEmpty()) { //check the current level of the user
             String textToSet = getResources().getString(R.string.level) +" "+ currentLevel;
             title.setText(textToSet);
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             currentLevel =getString(R.string.first_level);
-            editor.putString("currentLevel",currentLevel);
+            editor.putString(getString(R.string.sharedpreference_key),currentLevel);
             editor.commit();
         }
 
@@ -71,15 +71,15 @@ public class MainActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int count =0;
-                for(int i = 0;i<10;i++)
+                int correctAnswersCount =0;
+                for(int i = 0;i<Constants.ARRAY_SIZE;i++)
                 {
                     String A = answers.get(i).trim();
                     String B = modelList.get(i).getBlank().trim();
                     if(A.equals(B))
-                        count++;
+                        correctAnswersCount++;
                 }
-                showResult(count);
+                showResult(correctAnswersCount);
             }
         });
     }
@@ -96,9 +96,9 @@ public class MainActivity extends AppCompatActivity {
     public void callBackFromGetParagraph(String [] arr)
     {
 
-        for(String s : arr)
+        for(String sentence : arr)
         {
-            String [] sentenceDivisions = Utility.getInstance().stringManipulation(s);
+            String [] sentenceDivisions = Utility.getInstance().stringManipulation(sentence);
             ListItemModel model = new ListItemModel(sentenceDivisions[0],sentenceDivisions[2]);
             modelList.add(model);
             answers.add(sentenceDivisions[1]);
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             int i = 0;
             while(i<levelUp)
             {
-                shuffledAnswers.add(levelUparray[i]); //adding random words on level up
+                shuffledAnswers.add(levelUpArray[i]); //adding random words on level up
                 i++;
             }
         }
@@ -127,23 +127,23 @@ public class MainActivity extends AppCompatActivity {
 
         View layout = inflater.inflate(R.layout.scorecard_dialogbox,
                 (ViewGroup) findViewById(R.id.dialog_layout));
-        TextView messageTextview =(TextView)layout.findViewById(R.id.message);
-        if(score>=Constants.passingScore)
-            messageTextview.setText(getString(R.string.score_message_pass));
+        TextView messageTextView =(TextView)layout.findViewById(R.id.message);
+        if(score>=Constants.PASSING_SCORE)
+            messageTextView.setText(getString(R.string.score_message_pass));
         else
-            messageTextview.setText(getString(R.string.score_message_fail));
-        TextView scoreTextview = (TextView)layout.findViewById(R.id.score);
+            messageTextView.setText(getString(R.string.score_message_fail));
+        TextView scoreTextView = (TextView)layout.findViewById(R.id.score);
         String scoreValue = getString(R.string.your_score)+" "+String.valueOf(score)+ getString(R.string.total_score);
-        scoreTextview.setText(scoreValue);
+        scoreTextView.setText(scoreValue);
         dialog.setView(layout);
-        dialog.setTitle("Scorecard");
+        dialog.setTitle(getString(R.string.alertdialog_title));
 
-        if(score>= Constants.passingScore) {
-            dialog.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+        if(score>= Constants.PASSING_SCORE) {
+            dialog.setPositiveButton(getString(R.string.alertdialog_positive_text), new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
                     int levelVal=Integer.parseInt(currentLevel);
-                    if(levelVal==Constants.lastLevel)
+                    if(levelVal==Constants.LAST_LEVEL)
                     {
                         modelList.clear();
                         answers.clear();
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     else
                     {
                         currentLevel = String.valueOf(levelVal + 1);
-                        editor.putString("currentLevel", String.valueOf(levelVal + 1));
+                        editor.putString(getString(R.string.sharedpreference_key), String.valueOf(levelVal + 1));
                         editor.commit();
                         String textToSet = getResources().getString(R.string.level)+" "+String.valueOf(levelVal + 1);
                         title.setText(textToSet);
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         else {
-            dialog.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(getString(R.string.alertdialog_negative_text), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     modelList.clear();
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         if(Utility.getInstance().isInternetConnected(this))
         {
             progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Fetching Paragraph with blanks...");
+            progressDialog.setMessage(getString(R.string.progressdialog_message));
             progressDialog.show();
             GetParagraph.getInstance().getwikiParagraph(activity); //Network call to get the random paragraph from wiki
         }
@@ -199,15 +199,15 @@ public class MainActivity extends AppCompatActivity {
     }
     private void buildAlertMessageNoInternet() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your internet seems to be disabled, do you want to enable it?")
+        builder.setMessage(getString(R.string.internet_off_message))
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.internet_alertdialog_positive), new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         startActivity(new Intent(android.provider.Settings.ACTION_DATA_ROAMING_SETTINGS));
                     }
                     //
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.internet_alertdialog_negative), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
                     }
