@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage(getString(R.string.progressdialog_message));
             progressDialog.show();
-            GetParagraph.getInstance().getwikiParagraph(activity); //Network call to get the random paragraph from wiki
+            GetParagraph.getInstance().getWikiParagraph(activity); //Network call to get the random paragraph from wiki
         }
         else
             buildAlertMessageNoInternet();

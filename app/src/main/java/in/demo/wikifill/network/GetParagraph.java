@@ -1,5 +1,6 @@
 package in.demo.wikifill.network;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -33,7 +34,7 @@ public class GetParagraph {
         }
         return getParagraph;
     }
-    public void getwikiParagraph(final MainActivity activity)
+    public void getWikiParagraph(final MainActivity activity)
     {
 
         String url = activity.getResources().getString(R.string.get_paragraph_url);
@@ -51,34 +52,37 @@ public class GetParagraph {
                             JSONObject content = pages.getJSONObject(key);
                             String paragraph = content.getString("extract").replaceAll("\\<[^>]*>","").replaceAll("\\\n","").replaceAll("\\/","");
                             String [] lines = paragraph.split("\\.");
-                            int temp = lines.length;
+                            int paragraphLength = lines.length;
                             String [] linesToBeShown = new String[Constants.ARRAY_SIZE];
-                            //Check whether the paragraph we have fetched is of approprite size or not
-                            //we make a recursive call until we get paragarph of atleast 14 lines.
-                            if(temp< Constants.PARAGRAPH_SIZE)
+                            /**
+                             * Check whether the paragraph we have fetched is of appropriate size or not
+                             * we make a recursive call until we get paragraph of at least 14 lines.
+                             */
+                            if(paragraphLength< Constants.PARAGRAPH_SIZE)
                             {
-                                getwikiParagraph(activity);
+                                getWikiParagraph(activity);
                             }
                             else
                             {
-                                int j=0;
+                                int linesIndex=0;
                                 for(int i =0 ;i<Constants.ARRAY_SIZE;)
                                 {
-                                    if(j>temp-1)
+                                    if(linesIndex>paragraphLength-1)
                                         break;
-                                    String line = lines[j];
+                                    String line = lines[linesIndex];
                                     if(line.length()>Constants.PARAGRAPH_SIZE) {
-                                        linesToBeShown[i] = lines[j].trim();
+                                        linesToBeShown[i] = lines[linesIndex].trim();
                                         i++;
-                                        j++;
+                                        linesIndex++;
                                     }
                                     else
-                                    j++;
+                                    linesIndex++;
                                 }
                                 activity.callBackFromGetParagraph(linesToBeShown);
                             }
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
+                            Log.e("JsonException",e.toString());
                         }
                     }
                 }, new Response.ErrorListener() {
