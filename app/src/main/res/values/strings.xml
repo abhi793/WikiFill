@@ -10,6 +10,7 @@
     <string name="random3">carouse</string>
     <string name="random4">defunct</string>
     <string name="end_message">Thank you for playing the game!!</string>
+    <string name="level">LEVEL</string>
     <string-array name="random_words">
         <item>@string/random1</item>
         <item>@string/random2</item>

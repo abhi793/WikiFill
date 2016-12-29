@@ -30,12 +30,10 @@ public class MainActivity extends AppCompatActivity {
     Animation animation1;
     MainActivity activity;
     private ArrayList<String> answers;
-    private ArrayList <String> shuffledanswers;
+    private ArrayList <String> shuffledAnswers;
     private ArrayList <ListItemModel> modelList;
     private ListView linesListView;
-    private CustomListAdapter adapter;
     private ProgressDialog progressDialog;
-    private Button submitButton;
     public String currentLevel;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -47,22 +45,24 @@ public class MainActivity extends AppCompatActivity {
         activity = this;
         levelUparray = getResources().getStringArray(R.array.random_words);//extra words to add in shuffled list on level up
         title = (TextView)findViewById(R.id.level_textview);
-        submitButton = (Button)findViewById(R.id.submit_button);
+        Button submitButton = (Button)findViewById(R.id.submit_button);
         animation =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
         animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
-        answers = new ArrayList<String>();
+        answers = new ArrayList<>();
         linesListView = (ListView)findViewById(R.id.line_list);
-        shuffledanswers = new ArrayList<String>();
-        modelList = new ArrayList<ListItemModel>();
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-        editor = pref.edit();
+        shuffledAnswers = new ArrayList<>();
+        modelList = new ArrayList<>();
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+
         currentLevel = pref.getString("currentLevel", null);
         if (currentLevel != null && !currentLevel.isEmpty()) { //check the current level of the user
-            title.setText("LEVEL "+ currentLevel);
+            String textToSet = getResources().getString(R.string.level) +" "+ currentLevel;
+            title.setText(textToSet);
         }
         else
         {
             currentLevel ="1";
+            editor = pref.edit();
             editor.putString("currentLevel","1");
             editor.commit();
         }
@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 int count =0;
                 for(int i = 0;i<10;i++)
                 {
-                    String A = answers.get(i).toString().trim();
-                    String B = modelList.get(i).getBlank().toString().trim();
+                    String A = answers.get(i).trim();
+                    String B = modelList.get(i).getBlank().trim();
                     if(A.equals(B))
                         count++;
                 }
@@ -96,26 +96,26 @@ public class MainActivity extends AppCompatActivity {
     public void callBackFromGetParagraph(String [] arr)
     {
 
-        for(int i =0;i<arr.length;i++)
+        for(String s : arr)
         {
-            String [] sentenceDivisions = Utility.getInstance().stringManipulation(arr[i]);
+            String [] sentenceDivisions = Utility.getInstance().stringManipulation(s);
             ListItemModel model = new ListItemModel(sentenceDivisions[0],sentenceDivisions[2]);
             modelList.add(model);
             answers.add(sentenceDivisions[1]);
         }
-        shuffledanswers = Utility.getInstance().shuffle(answers);
+        shuffledAnswers = Utility.getInstance().shuffle(answers);
         int levelUp=Integer.parseInt(currentLevel)-1;
         if(levelUp>0)
         {
             int i = 0;
             while(i<levelUp)
             {
-                shuffledanswers.add(levelUparray[i]); //adding random words on level up
+                shuffledAnswers.add(levelUparray[i]); //adding random words on level up
                 i++;
             }
         }
         progressDialog.dismiss();
-        adapter = new CustomListAdapter(this,modelList,shuffledanswers);
+        CustomListAdapter adapter = new CustomListAdapter(this,modelList, shuffledAnswers);
         linesListView.setAdapter(adapter);
         title.startAnimation(animation);
         linesListView.startAnimation(animation1);
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         modelList.clear();
                         answers.clear();
-                        shuffledanswers.clear();
+                        shuffledAnswers.clear();
                         Intent intent = getIntent();
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.setClass(MainActivity.this, EndActivity.class);
@@ -156,10 +156,11 @@ public class MainActivity extends AppCompatActivity {
                         currentLevel = String.valueOf(levelVal + 1);
                         editor.putString("currentLevel", String.valueOf(levelVal + 1));
                         editor.commit();
-                        title.setText("LEVEL " + String.valueOf(levelVal + 1));
+                        String textToSet = getResources().getString(R.string.level)+" "+String.valueOf(levelVal + 1);
+                        title.setText(textToSet);
                         modelList.clear();
                         answers.clear();
-                        shuffledanswers.clear();
+                        shuffledAnswers.clear();
                         networkCall();
                         dialog.dismiss();
                     }
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     modelList.clear();
                     answers.clear();
-                    shuffledanswers.clear();
+                    shuffledAnswers.clear();
                     networkCall();
                 }
             });

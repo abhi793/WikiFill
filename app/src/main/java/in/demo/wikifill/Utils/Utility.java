@@ -40,17 +40,23 @@ public class Utility {
     StringBuilder end = new StringBuilder();
     for(int i=0;i<idx;i++)
     {
-        if(i<idx-1)
-        start.append(temp[i]+" ");
+        if(i<idx-1) {
+            String getWord = temp[i] + " ";
+            start.append(getWord);
+        }
         else
             start.append(temp[i]);
     }
     for(int i=idx+1;i<temp.length;i++)
     {
-        if(i<temp.length-1)
-        end.append(temp[i]+" ");
-        else
-            end.append(temp[i]+".");
+        if(i<temp.length-1) {
+            String getWord = temp[i] + " ";
+            end.append(getWord);
+        }
+        else {
+            String getWord = temp[i] + ".";
+            end.append(getWord);
+        }
     }
     ans[0]=start.toString();
     ans[1]=temp[idx];
@@ -75,7 +81,7 @@ public class Utility {
         }
         return shuffledList;
     }
-    public static boolean isInternetConnected(Context context) {
+    public  boolean isInternetConnected(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getActiveNetworkInfo();

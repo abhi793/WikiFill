@@ -3,7 +3,6 @@ package in.demo.wikifill.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,10 +12,7 @@ import in.demo.wikifill.R;
 
 public class SplashActivity extends Activity {
 
-    /** Duration of wait **/
-    private final int SPLASH_DISPLAY_LENGTH = 2000;
-    private TextView welcomeTextview;
-    private Animation animation;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle icicle) {
@@ -24,8 +20,9 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
-        welcomeTextview = (TextView)findViewById(R.id.welcome_message);
-        animation =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.splash_screen_animation);
+        final int SPLASH_DISPLAY_LENGTH = 2000;
+        TextView welcomeTextview = (TextView)findViewById(R.id.welcome_message);
+        Animation animation =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.splash_screen_animation);
         welcomeTextview.startAnimation(animation);
         new Handler().postDelayed(new Runnable(){
             @Override

@@ -3,7 +3,6 @@ package in.demo.wikifill.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
