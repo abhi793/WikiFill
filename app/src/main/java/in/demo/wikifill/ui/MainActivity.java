@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import in.demo.wikifill.Model.ListItemModel;
 import in.demo.wikifill.Network.GetParagraph;
 import in.demo.wikifill.R;
+import in.demo.wikifill.Utils.Constants;
 import in.demo.wikifill.Utils.Utility;
 import in.demo.wikifill.adapter.CustomListAdapter;
 
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         shuffledAnswers = new ArrayList<>();
         modelList = new ArrayList<>();
         pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        editor = pref.edit();
         currentLevel = pref.getString("currentLevel", null);
         if (currentLevel != null && !currentLevel.isEmpty()) { //check the current level of the user
             String textToSet = getResources().getString(R.string.level) +" "+ currentLevel;
@@ -60,9 +62,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            currentLevel ="1";
-            editor = pref.edit();
-            editor.putString("currentLevel","1");
+            currentLevel =getString(R.string.first_level);
+            editor.putString("currentLevel",currentLevel);
             editor.commit();
         }
 
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * This function sets the sentences to the List item model
+     * This function sets the sentences to the List item model after dividing the sentence
      * @param arr,array of sentences fetched from wikipedia
      */
     public void callBackFromGetParagraph(String [] arr)
@@ -127,21 +128,22 @@ public class MainActivity extends AppCompatActivity {
         View layout = inflater.inflate(R.layout.scorecard_dialogbox,
                 (ViewGroup) findViewById(R.id.dialog_layout));
         TextView messageTextview =(TextView)layout.findViewById(R.id.message);
-        if(score>5)
+        if(score>=Constants.passingScore)
             messageTextview.setText(getString(R.string.score_message_pass));
         else
             messageTextview.setText(getString(R.string.score_message_fail));
         TextView scoreTextview = (TextView)layout.findViewById(R.id.score);
-        String scoreValue = getString(R.string.your_score)+" "+String.valueOf(score)+"/10";
+        String scoreValue = getString(R.string.your_score)+" "+String.valueOf(score)+ getString(R.string.total_score);
         scoreTextview.setText(scoreValue);
         dialog.setView(layout);
         dialog.setTitle("Scorecard");
-        if(score>5) {
+
+        if(score>= Constants.passingScore) {
             dialog.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
                     int levelVal=Integer.parseInt(currentLevel);
-                    if(levelVal==5)
+                    if(levelVal==Constants.lastLevel)
                     {
                         modelList.clear();
                         answers.clear();
